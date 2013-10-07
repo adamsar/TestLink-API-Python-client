@@ -148,12 +148,20 @@ class TestlinkAPIClient(object):
                 'testprojectid':str(testprojectid)}  
         return self._callServer('getProjectTestPlans', argsAPI)
 
-    def getTestCase(self, testcaseid):
+    def getTestCase(self, testcaseid=None, external_id=None):
         """ getTestCase :
-        Gets test case specification using external or internal id  
+        Gets test case specification using external or internal id.
+        Either a testcaseid or an external_id is required.
         """
-        argsAPI = {'devKey' : self.devKey,
-                'testcaseid' : str(testcaseid)}  
+        if not testcaseid and not external_id:
+            raise ValueError("Either a testcaseid or an external_id is required")
+            
+        argsAPI = {'devKey' : self.devKey}
+        if testcaseid:
+            argsAPI['testcaseid'] = str(testcaseid)
+        if external_id:
+            argsAPI['testcaseexternalid'] = str(external_id)
+
         return self._callServer('getTestCase', argsAPI)          
 
     def getTestCaseAttachments(self, testcaseid):
